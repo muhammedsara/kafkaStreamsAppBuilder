@@ -10,6 +10,27 @@
         <div class="container-fluid">
             <section>
                 <p>Index</p>
+                <div class="container">
+                    <h2>App List</h2>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr th:each="app : ${apps}">
+                            <td th:text="${app.id}"></td>
+                            <td th:text="${app.appName}">Name</td>
+                            <td th:text="${app.createDate}">Date</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </div>
     </div>

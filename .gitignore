@@ -35,3 +35,6 @@
 *.jpg
 *.png
 *.gif
+
+### Ignore db
+kafkastremsappbuilderdb/

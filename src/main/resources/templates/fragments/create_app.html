@@ -8,11 +8,57 @@
     <div th:replace="template::sidebar"></div>
     <div id="content-wrapper">
         <div class="container-fluid">
-            <section>
-                <p>Create app</p>
-            </section>
+            <div class="row">
+                <div class="col-sm-9" id="cy">
+                </div>
+                <div class="col-sm-2">
+                    <div id="tools" class="col-sm-12">
+                        <h3>Tools</h3>
+                        <button id="addSource" class="btn btn-info">Add Source</button>
+                    </div>
+                    <hr>
+                    <div id="props" class="col-sm-12">
+                        <h3>Properties</h3>
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <td>Topic Name:</td>
+                                <td><input type="text"></td>
+                            </tr>
+                            <tr>
+                                <td>Start From Begining:</td>
+                                <td><input type="checkbox"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div th:replace="template::scripts"></div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.19/cytoscape.js"></script>
+<script>
+    var windowH = window.innerHeight;
+    document.body.innerHTML += "<style>#cy{height: " + windowH * .8 + "px}</style>"
+    var cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: []
+    });
+    cy.on('click', 'node', function (evt) {
+        console.log(evt.target);
+    });
+    var btnAddSrc = document.getElementById('addSource');
+    btnAddSrc.addEventListener('click', function () {
+        cy.add({
+            group: "nodes",
+            data: {weight: 75},
+            position: {x: 200, y: 200}
+        });
+    });
+</script>
+
 </body>
 </html>

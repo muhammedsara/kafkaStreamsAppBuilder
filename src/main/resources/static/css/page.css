@@ -1,0 +1,12 @@
+h3 {
+    color:#ddd;
+}
+#cy {
+    border-right:2px solid #ddd;
+}
+#props td {
+    font-size: 13px;
+}
+#props input[type='text']{
+    width:80px;
+}

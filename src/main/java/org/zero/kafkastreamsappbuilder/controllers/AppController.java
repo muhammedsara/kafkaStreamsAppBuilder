@@ -20,15 +20,6 @@ public class AppController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Map<String, Object> model){
         List<AppModel> all = appRepository.findAll();
-        // creates default app
-        if (all.size() < 1){
-            AppModel app = new AppModel();
-            app.setAppName("defaultApp");
-            app.setCreateDate(new Date());
-            appRepository.save(app);
-            all = appRepository.findAll();
-        }
-
         model.put("apps", all);
         return "fragments/index";
     }

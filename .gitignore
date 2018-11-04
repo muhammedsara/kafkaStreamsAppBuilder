@@ -29,3 +29,9 @@
 
 ### Ignore Log
 *.log
+
+### Ignore images
+*.jpeg
+*.jpg
+*.png
+*.gif

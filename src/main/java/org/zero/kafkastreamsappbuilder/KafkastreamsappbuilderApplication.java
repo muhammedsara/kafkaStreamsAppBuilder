@@ -29,35 +29,38 @@ public class KafkastreamsappbuilderApplication {
     @Autowired
     private OperatorRepository operatorRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(KafkastreamsappbuilderApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(KafkastreamsappbuilderApplication.class, args);
+    }
 
     @Bean
     InitializingBean sendDatabase() {
         return () -> {
-            // add default app
-            AppModel app = new AppModel();
-            app.setAppName("defaultApp");
-            app.setCreateDate(new Date());
-            appRepository.save(app);
+            if (appRepository.count() == 0) {
+                // add default app
+                AppModel app = new AppModel();
+                app.setAppName("defaultApp");
+                app.setCreateDate(new Date());
+                appRepository.save(app);
+            }
+            if (typeRepository.count() == 0) {
+                // add KStream type
+                TypeModel kstream = new TypeModel();
+                kstream.setTypeName("org.apache.kafka.streams.kstream.KStream");
+                typeRepository.save(kstream);
 
-            // add KStream type
-            TypeModel kstream = new TypeModel();
-            kstream.setTypeName("org.apache.kafka.streams.kstream.KStream");
-            typeRepository.save(kstream);
+                // add KTable type
+                TypeModel ktable = new TypeModel();
+                ktable.setTypeName("org.apache.kafka.streams.kstream.KTable");
+                typeRepository.save(ktable);
 
-            // add KTable type
-            TypeModel ktable = new TypeModel();
-            ktable.setTypeName("org.apache.kafka.streams.kstream.KTable");
-            typeRepository.save(ktable);
-
-            // map operator
-            OperatorModel map = new OperatorModel();
-            map.setSourceType(kstream);
-            map.setReturnType(kstream);
-            map.setName("map stream");
-            operatorRepository.save(map);
+                // map operator
+                OperatorModel map = new OperatorModel();
+                map.setSourceType(kstream);
+                map.setReturnType(kstream);
+                map.setName("map stream");
+                operatorRepository.save(map);
+            }
         };
     }
 }

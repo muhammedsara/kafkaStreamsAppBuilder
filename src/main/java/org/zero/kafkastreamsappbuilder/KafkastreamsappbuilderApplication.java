@@ -55,6 +55,13 @@ public class KafkastreamsappbuilderApplication {
                 typeRepository.save(ktable);
 
                 // map operator
+                OperatorModel kafkaSource = new OperatorModel();
+                kafkaSource.setSourceType(null);
+                kafkaSource.setReturnType(kstream);
+                kafkaSource.setName("kafka source");
+                operatorRepository.save(kafkaSource);
+
+                // map operator
                 OperatorModel map = new OperatorModel();
                 map.setSourceType(kstream);
                 map.setReturnType(kstream);

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface OperatorRepository extends JpaRepository<OperatorModel,Integer> {
 
-    List<OperatorModel> findOperatorModelBySourceType_Id(int id);
+    List<OperatorModel> findOperatorModelBySourceType_Id(Integer id);
 }

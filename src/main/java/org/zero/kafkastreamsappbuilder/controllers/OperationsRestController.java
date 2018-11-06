@@ -22,9 +22,8 @@ public class OperationsRestController {
      * @return list of available operations.
      */
     @RequestMapping("rest/getavailableoperations")
-    public List<OperatorModel> getAvailableOperations(@RequestParam("sId") String sId){
-
-        return operatorRepository.findOperatorModelBySourceType_Id(Integer.parseInt(sId));
+    public List<OperatorModel> getAvailableOperations(@RequestParam("sId") Integer sId){
+        return operatorRepository.findOperatorModelBySourceType_Id(sId);
     }
 
 }

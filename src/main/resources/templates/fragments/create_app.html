@@ -40,25 +40,6 @@
     <div th:replace="template::scripts"></div>
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.19/cytoscape.js"></script>
-<script>
-    var windowH = window.innerHeight;
-    document.body.innerHTML += "<style>#cy{height: " + windowH * .8 + "px}</style>"
-    var cy = cytoscape({
-        container: document.getElementById('cy'),
-        elements: []
-    });
-    cy.on('click', 'node', function (evt) {
-        console.log(evt.target);
-    });
-    var btnAddSrc = document.getElementById('addSource');
-    btnAddSrc.addEventListener('click', function () {
-        cy.add({
-            group: "nodes",
-            data: {weight: 75},
-            position: {x: 200, y: 200}
-        });
-    });
-</script>
-
+<script type="text/javascript" src="/js/createApp.js"></script>
 </body>
 </html>

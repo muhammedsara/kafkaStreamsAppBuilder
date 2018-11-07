@@ -12,6 +12,7 @@ import org.zero.kafkastreamsappbuilder.jpa.PropertyRepository;
 import org.zero.kafkastreamsappbuilder.jpa.TypeRepository;
 import org.zero.kafkastreamsappbuilder.models.AppModel;
 import org.zero.kafkastreamsappbuilder.models.OperatorModel;
+import org.zero.kafkastreamsappbuilder.models.PropertyModel;
 import org.zero.kafkastreamsappbuilder.models.TypeModel;
 
 import java.util.Date;
@@ -67,6 +68,12 @@ public class KafkastreamsappbuilderApplication {
                 map.setReturnType(kstream);
                 map.setName("map stream");
                 operatorRepository.save(map);
+
+                //topic name
+                PropertyModel topicNameProperty = new PropertyModel();
+                topicNameProperty.setName("topic name");
+                topicNameProperty.setOperator(kafkaSource);
+                propertyRepository.save(topicNameProperty);
             }
         };
     }

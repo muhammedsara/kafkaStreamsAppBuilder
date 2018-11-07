@@ -9,6 +9,7 @@ import org.zero.kafkastreamsappbuilder.jpa.OperatorRepository;
 import org.zero.kafkastreamsappbuilder.models.OperatorModel;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class OperationsRestController {
@@ -23,7 +24,10 @@ public class OperationsRestController {
      */
     @RequestMapping("rest/getavailableoperations")
     public List<OperatorModel> getAvailableOperations(@RequestParam("sId") Integer sId){
-        return operatorRepository.findOperatorModelBySourceType_Id(sId);
+        return operatorRepository.findOperatorModelBySourceType_Id(sId)
+                .stream()
+                .peek(x -> x.setProperties(null))
+                .collect(Collectors.toList());
     }
 
 }

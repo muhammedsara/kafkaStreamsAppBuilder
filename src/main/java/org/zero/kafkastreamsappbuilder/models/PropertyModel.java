@@ -26,6 +26,14 @@ public class PropertyModel {
     @JoinColumn(name = "operator_id")
     private OperatorModel operator;
 
+    public OperatorModel getOperator() {
+        return operator;
+    }
+
+    public void setOperator(OperatorModel operator) {
+        this.operator = operator;
+    }
+
     public int getId() {
         return id;
     }
@@ -42,14 +50,5 @@ public class PropertyModel {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
-    }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @Column(name = "value")
-    private String value;
 }

@@ -5,13 +5,27 @@ var cy = cytoscape({
     elements: []
 });
 cy.on('click', 'node', function (evt) {
-    console.log(evt.target);
+    $('#propBody').remove();
+    var operationId = this.data().operatorId;
+    $.getJSON("/rest/getavailableproperties?opId=" + (operationId || ""), function (data) {
+        console.log(data);
+        var ht = "<tbody id='propBody'></tbody>";
+        $('#propTable').append(ht);
+        for (var item in data) {
+            var name = data[item].name;
+            var html = "<tr><td>" + name + "</td><td><input type='text'></td></tr>";
+            $('#propTable').append(html);
+        }
+
+    })
+
+
 });
 
-var updateOpertaionsPanel = function(sourceOpId){
-    $.getJSON("/rest/getavailableoperations?sId="+(sourceOpId || ""), function(data){
+var updateOpertaionsPanel = function (sourceOpId) {
+    $.getJSON("/rest/getavailableoperations?sId=" + (sourceOpId || ""), function (data) {
         console.log(data);
-        for(var item in data){
+        for (var item in data) {
             var name = data[item].name;
             var btn = document.createElement("BUTTON");
             btn.innerText = name;
@@ -20,7 +34,10 @@ var updateOpertaionsPanel = function(sourceOpId){
             btn.addEventListener('click', function () {
                 cy.add({
                     group: "nodes",
-                    data: {label: name},
+                    data: {
+                        label: name,
+                        operatorId: data[item].id
+                    },
                     position: {x: 200, y: 200}
                 });
             });
@@ -32,3 +49,4 @@ var updateOpertaionsPanel = function(sourceOpId){
     });
 }
 updateOpertaionsPanel();
+

@@ -10,3 +10,6 @@ h3 {
 #props input[type='text']{
     width:80px;
 }
+#btnRemoveNode {
+    margin-top:2px;
+}

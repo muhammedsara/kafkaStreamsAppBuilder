@@ -2,6 +2,10 @@ var operationId;
 var nodeCount = 0;
 var lastClikedCy;
 
+var isNodeLeaf = function (node) {
+    return cy.nodes().leaves().filter(x => x.id() == node.id()).length;
+}
+
 var windowH = window.innerHeight;
 document.body.innerHTML += "<style>#cy{height: " + windowH * .8 + "px}</style>"
 var cy = cytoscape({
@@ -70,15 +74,70 @@ var updateOpertaionsPanel = function (sourceOpId) {
                             source: lastClikedCy.id(),
                             target: nodeCount
                         }
+
                     });
                 }
                 cy.add(cyData);
                 nodeCount++;
             });
-            cy.style().selector('node')
+            var btn = document.createElement("BUTTON");
+            btn.innerText = name;
+            btn.classList += "btn btn-info";
+            document.getElementById("tools_inner").innerHTML = "";
+            document.getElementById("tools_inner").appendChild(btn);
+            btn.addEventListener('click', function () {
+                console.log("source: " + operationId + " target " + data[item].id);
+                var cyData = [{
+                    group: "nodes",
+                    data: {
+                        id: nodeCount,
+                        label: name,
+                        operatorId: data[item].id,
+                        returnTypeId: data[item].returnType.id
+
+                    },
+                    position: {x: 200, y: 200}
+                }];
+                if (lastClikedCy) {
+                    cyData.push({
+                        group: "edges",
+                        data: {
+                            source: lastClikedCy.id(),
+                            target: nodeCount
+                        }
+
+                    });
+                }
+                cy.add(cyData);
+                nodeCount++;
+                $("#btnRemoveNode").remove();
+            });
+
+            cy.style()
+                .selector('node')
                 .style({
-                    'label': 'data(label)'
-                }).update()
+                    'label': 'data(label)',
+                    shape: 'rectangle'
+                })
+                .selector("edge")
+                .style({
+                    'curve-style': "bezier",
+                    'target-arrow-shape': 'triangle'
+                })
+                .update()
+        }
+        if (sourceOpId && isNodeLeaf(lastClikedCy)) {
+            var btnRemove = document.createElement("BUTTON");
+            btnRemove.innerText = "Remove";
+            btnRemove.classList += "btn btn-sm btn-danger";
+            btnRemove.setAttribute("id","btnRemoveNode");
+            document.getElementById("tools_inner").appendChild(btnRemove);
+            btnRemove.addEventListener('click', function () {
+
+                cy.remove(lastClikedCy);
+                lastClikedCy = null;
+                updateOpertaionsPanel();
+            });
         }
     });
 }

@@ -1,7 +1,8 @@
 var operationId;
 var nodeCount = 0;
 var lastClikedCy;
-
+var btnSave;
+var graphData={};
 var isNodeLeaf = function (node) {
     return cy.nodes().leaves().filter(x => x.id() == node.id()).length;
 }
@@ -41,6 +42,21 @@ cy.on('click', 'node', function (evt) {
     updateOpertaionsPanel(returnTypeId);
 
 
+});
+
+btnSave = document.getElementById("btnSave");
+btnSave.addEventListener("click", function () {
+    //save the graphData to into variable
+    graphData = JSON.stringify(cy.json());
+    var newAppName = prompt("Please enter your application");
+    if (newAppName != null) {
+        $.post("/rest/savenewapp", {
+            appName : newAppName,
+            appJson : graphData
+        }).done(function (data) {
+            alert("saved");
+        });
+    }
 });
 
 var updateOpertaionsPanel = function (sourceOpId) {
@@ -130,7 +146,7 @@ var updateOpertaionsPanel = function (sourceOpId) {
             var btnRemove = document.createElement("BUTTON");
             btnRemove.innerText = "Remove";
             btnRemove.classList += "btn btn-sm btn-danger";
-            btnRemove.setAttribute("id","btnRemoveNode");
+            btnRemove.setAttribute("id", "btnRemoveNode");
             document.getElementById("tools_inner").appendChild(btnRemove);
             btnRemove.addEventListener('click', function () {
 
@@ -141,5 +157,7 @@ var updateOpertaionsPanel = function (sourceOpId) {
         }
     });
 }
+
+
 updateOpertaionsPanel();
 

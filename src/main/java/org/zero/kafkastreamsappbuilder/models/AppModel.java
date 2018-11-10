@@ -1,10 +1,6 @@
 package org.zero.kafkastreamsappbuilder.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -24,6 +20,18 @@ public class AppModel {
 
     @Column(name="create_date")
     private Date createDate;
+
+
+    @Column(name="app_json", length = 32500)
+    private String appJson;
+
+    public String getAppJson() {
+        return appJson;
+    }
+
+    public void setAppJson(String appJson) {
+        this.appJson = appJson;
+    }
 
     public int getId() {
         return id;

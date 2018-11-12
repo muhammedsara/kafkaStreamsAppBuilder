@@ -45,6 +45,8 @@
             </div>
         </div>
     </div>
+    <script id="appData" type="text" th:utext="${app?.appJson}"></script>
+    <input type="hidden" id="appId" th:value="${app?.id}"/>
     <div th:replace="template::scripts"></div>
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.19/cytoscape.js"></script>

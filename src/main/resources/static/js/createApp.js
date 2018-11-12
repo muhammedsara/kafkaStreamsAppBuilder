@@ -2,9 +2,44 @@ var operationId;
 var nodeCount = 0;
 var lastClikedCy;
 var btnSave;
-var graphData={};
+var graphData = JSON.parse(document.getElementById("appData").innerText || "{}") ;
+
+var updateCyGraph = function(){
+    cy.json(graphData);
+}
+
 var isNodeLeaf = function (node) {
     return cy.nodes().leaves().filter(x => x.id() == node.id()).length;
+}
+
+
+var updateExistingApp = function(){
+    graphData = JSON.stringify(cy.json());
+    var appId = document.getElementById("appId").value;
+    $.post("/rest/updateapp", {
+        appId : appId,
+        appJson : graphData
+    }).done(function (data) {
+        alert("saved");
+    });
+}
+
+var saveNewApp = function(){
+    //save the graphData to into variable
+    graphData = JSON.stringify(cy.json());
+    var newAppName = prompt("Please enter your application");
+    if (newAppName != null) {
+        $.post("/rest/savenewapp", {
+            appName : newAppName,
+            appJson : graphData
+        }).done(function (data) {
+            alert("saved");
+        });
+    }
+}
+
+var isNewApp = function(){
+    return document.getElementById("appId").value == "";
 }
 
 var windowH = window.innerHeight;
@@ -46,18 +81,14 @@ cy.on('click', 'node', function (evt) {
 
 btnSave = document.getElementById("btnSave");
 btnSave.addEventListener("click", function () {
-    //save the graphData to into variable
-    graphData = JSON.stringify(cy.json());
-    var newAppName = prompt("Please enter your application");
-    if (newAppName != null) {
-        $.post("/rest/savenewapp", {
-            appName : newAppName,
-            appJson : graphData
-        }).done(function (data) {
-            alert("saved");
-        });
+    if (isNewApp()){
+        saveNewApp();
+    } else {
+        updateExistingApp();
     }
 });
+
+
 
 var updateOpertaionsPanel = function (sourceOpId) {
     $.getJSON("/rest/getavailableoperations?sId=" + (sourceOpId || ""), function (data) {
@@ -160,4 +191,5 @@ var updateOpertaionsPanel = function (sourceOpId) {
 
 
 updateOpertaionsPanel();
+updateCyGraph();
 

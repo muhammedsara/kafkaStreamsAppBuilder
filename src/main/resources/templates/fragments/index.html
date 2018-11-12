@@ -27,7 +27,7 @@
                             <td th:text="${app.id}"></td>
                             <td th:text="${app.appName}">Name</td>
                             <td th:text="${app.createDate}">Date</td>
-                            <td> <i class="fas fa-edit"></i></td>
+                            <td> <a th:href="@{'/app/edit/'+${app.id}}"><i class="fas fa-edit"></i></a></td>
                         </tr>
 
                         </tbody>

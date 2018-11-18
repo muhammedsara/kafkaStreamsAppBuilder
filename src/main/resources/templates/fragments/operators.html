@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://wwww.thymeleaf.org">
+<head th:replace="template::header"></head>
+<body>
+<div th:replace="template::nav"></div>
+<div id="wrapper">
+    <div th:replace="template::sidebar"></div>
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <section>
+
+                <div class="container">
+                    <h2>Operator List</h2>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Source Type</th>
+                            <th>Return Type</th>
+                            <th>Edit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr th:each="operator : ${operators}">
+                            <td th:text="${operator.id}"></td>
+                            <td th:text="${operator.name}">Name</td>
+                            <td th:text="${operator.sourceType?.typeName}">sourceType</td>
+                            <td th:text="${operator.returnType?.typeName}">returnType</td>
+                            <td> <a th:href="@{'/operator/edit/'+${operator.id}}"><i class="fas fa-edit"></i></a></td>
+                            <!--<td> <i class="fas fa-edit"></i></td>-->
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div th:replace="template::scripts"></div>
+</body>
+</html>

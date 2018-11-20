@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.zero.kafkastreamsappbuilder.exceptions.NoAppFoundException;
 import org.zero.kafkastreamsappbuilder.exceptions.NoOperatorFoundException;
 import org.zero.kafkastreamsappbuilder.jpa.OperatorRepository;
+import org.zero.kafkastreamsappbuilder.jpa.TypeRepository;
 import org.zero.kafkastreamsappbuilder.models.OperatorModel;
+import org.zero.kafkastreamsappbuilder.models.TypeModel;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,8 @@ public class OperationController {
 
     @Autowired
     public OperatorRepository operatorRepository;
+    @Autowired
+    public TypeRepository typeRepository;
 
     @RequestMapping(value = "/operators", method = RequestMethod.GET)
     public String operators(Map<String, Object> model) {
@@ -28,8 +32,11 @@ public class OperationController {
     }
     @RequestMapping(value = "/operator/create", method = RequestMethod.GET)
     public String newOperator(Map<String, Object> model) {
+        List<TypeModel> all = typeRepository.findAll();
+        model.put("types", all);
         return "fragments/create_operator";
     }
+
 
     @RequestMapping(value = "/operator/edit/{id}", method = RequestMethod.GET)
     public String editOperator(Map<String, Object> model,

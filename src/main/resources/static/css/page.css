@@ -16,3 +16,9 @@ h3 {
 #btnSave {
     margin-right:1px;
 }
+.pt-3-half {
+    padding-top: 1.4rem;
+}
+.form .row {
+    margin-top: 2px;
+}

@@ -2,9 +2,7 @@ package org.zero.kafkastreamsappbuilder.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.zero.kafkastreamsappbuilder.exceptions.NoAppFoundException;
 import org.zero.kafkastreamsappbuilder.exceptions.NoOperatorFoundException;
 import org.zero.kafkastreamsappbuilder.jpa.OperatorRepository;
@@ -34,9 +32,9 @@ public class OperationController {
     public String newOperator(Map<String, Object> model) {
         List<TypeModel> all = typeRepository.findAll();
         model.put("types", all);
+        model.put("operator", new OperatorModel());
         return "fragments/create_operator";
     }
-
 
     @RequestMapping(value = "/operator/edit/{id}", method = RequestMethod.GET)
     public String editOperator(Map<String, Object> model,
@@ -49,4 +47,10 @@ public class OperationController {
         }
         return "fragments/create_operator";
     }
+    @PostMapping(value = "/operator/save")
+    public String saveOperator(@ModelAttribute OperatorModel model) {
+        operatorRepository.save(model);
+        return "fragments/success";
+    }
+
 }

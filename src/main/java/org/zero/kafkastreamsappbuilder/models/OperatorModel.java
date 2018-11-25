@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,7 +32,7 @@ public class OperatorModel {
     @JoinColumn(name = "return_type_id")
     private TypeModel returnType;
     @OneToMany(mappedBy = "operator")
-    private Set<PropertyModel> properties;
+    private List<PropertyModel> properties;
     @Column(name = "template")
     private String template;
 
@@ -69,11 +71,11 @@ public class OperatorModel {
         this.returnType = returnType;
     }
 
-    public Set<PropertyModel> getProperties() {
+    public List<PropertyModel> getProperties() {
         return properties;
     }
 
-    public void setProperties(Set<PropertyModel> properties) {
+    public void setProperties(List<PropertyModel> properties) {
         this.properties = properties;
     }
 

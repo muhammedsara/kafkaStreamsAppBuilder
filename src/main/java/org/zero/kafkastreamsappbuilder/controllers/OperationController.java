@@ -38,7 +38,9 @@ public class OperationController {
     public String newOperator(Map<String, Object> model) {
         List<TypeModel> all = typeRepository.findAll();
         model.put("types", all);
-        model.put("operator", new OperatorModel());
+        OperatorModel newOp = new OperatorModel();
+        newOp.setId(-1);
+        model.put("operator", newOp);
         return "fragments/create_operator";
     }
 
@@ -59,15 +61,25 @@ public class OperationController {
     @PostMapping(value = "/operator/save")
     public String saveOperator(@ModelAttribute OperatorModel model) {
         // TODO: why manual cascading?
-        List<PropertyModel> modifiedProperties = new ArrayList<>();
-        List<PropertyModel> oldProperties = propertyRepository.findPropertyModelByOperator_Id(model.getId());
-        oldProperties.forEach(p -> propertyRepository.delete(p));
-        for (PropertyModel m : model.getProperties()) {
-            m.setOperator(model);
-            modifiedProperties.add(propertyRepository.save(m));
+        boolean isNew = model.getId() == -1;
+        if (isNew) {
+            model.setId(0);
+            operatorRepository.save(model);
+            for (PropertyModel m : model.getProperties()) {
+                m.setOperator(model);
+                propertyRepository.save(m);
+            }
+        } else {
+            List<PropertyModel> modifiedProperties = new ArrayList<>();
+            List<PropertyModel> oldProperties = propertyRepository.findPropertyModelByOperator_Id(model.getId());
+            oldProperties.forEach(p -> propertyRepository.delete(p));
+            for (PropertyModel m : model.getProperties()) {
+                m.setOperator(model);
+                modifiedProperties.add(propertyRepository.save(m));
+            }
+            model.setProperties(modifiedProperties);
+            operatorRepository.save(model);
         }
-        model.setProperties(modifiedProperties);
-        operatorRepository.save(model);
         return "fragments/success";
     }
 

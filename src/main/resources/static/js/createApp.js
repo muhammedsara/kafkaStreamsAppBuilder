@@ -92,14 +92,12 @@ btnSave.addEventListener("click", function () {
 
 var updateOpertaionsPanel = function (sourceOpId) {
     $.getJSON("/rest/getavailableoperations?sId=" + (sourceOpId || ""), function (data) {
-        //console.log(data);
-
+        document.getElementById("tools_inner").innerHTML = "";
         for (var item in data) {
             var name = data[item].name;
             var btn = document.createElement("BUTTON");
             btn.innerText = name;
             btn.classList += "btn btn-info";
-            document.getElementById("tools_inner").innerHTML = "";
             document.getElementById("tools_inner").appendChild(btn);
             btn.addEventListener('click', function () {
                 console.log("source: " + operationId + " target " + data[item].id);

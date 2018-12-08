@@ -40,11 +40,33 @@
                 <div class="col-sm-7"></div>
                 <div class="col-sm-3">
                     <button id="btnSave" class="btn btn-sm btn-info">Save</button>
-                    <button id="btnGenerateCode" class="btn btn-sm btn-warning">Generate Code</button>
+                    <input type="submit" id="btnGenerateCode" class="btn btn-sm btn-warning"
+                           value="Generate Code"/>
                 </div>
                 <div class="col-sm-2"></div>
             </div>
         </div>
+        <!--Modal -->
+        <div class="modal" id="generatedCodeModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Generated Java Code </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Modal body text goes here.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Build</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Modal Ends-->
     </div>
     <script id="appData" type="text" th:utext="${app?.appJson}"></script>
     <input type="hidden" id="appId" th:value="${app?.id}"/>

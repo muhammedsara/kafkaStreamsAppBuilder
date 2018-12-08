@@ -174,6 +174,25 @@ function updateCyStyle(cy){
         .update();
 }
 
+document.getElementById("btnGenerateCode").addEventListener('click', generateCode);
+
+function generateCode(){
+    var graphData = cy.json();
+    var edges = graphData["elements"]["edges"].map(x=>x.data);
+    var nodes = graphData["elements"]["nodes"].map(x=>x.data);
+
+    $.post("/app/generateCode", {
+        appJson : JSON.stringify({
+            edges: edges,
+            nodes: nodes
+        })
+    }).done(function (response) {
+        $("#generatedCodeModal").find(".modal-body").text(response);
+        $("#generatedCodeModal").modal('show');
+    });
+}
+
+
 
 updateOpertaionsPanel();
 updateCyGraph();

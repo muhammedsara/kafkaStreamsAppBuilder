@@ -59,6 +59,9 @@ cy.on('click', function (event) {
 
 var updatePropertyOfNode = function(inputElement){
     var propName = inputElement.getAttribute("data-prop-name");
+    if(lastClikedCy.data().properties==null){
+        lastClikedCy.data().properties={};
+    }
     lastClikedCy.data().properties[propName] = inputElement.value;
 }
 
@@ -74,7 +77,7 @@ cy.on('click', 'node', function (evt) {
         $('#propTable').append(ht);
         for (var item in data) {
             var name = data[item].name;
-            var propertyValue = properties[name] || "";
+            var propertyValue = (properties || {})[name] || "";
             var html = "<tr><td>" + name +
                 "</td><td><input type='text' data-prop-name='"+name+"' " +
                 "oninput='updatePropertyOfNode(this)' value='"+propertyValue+"'></td></tr>";

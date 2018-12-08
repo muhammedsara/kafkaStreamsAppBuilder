@@ -57,10 +57,16 @@ cy.on('click', function (event) {
     }
 });
 
+var updatePropertyOfNode = function(inputElement){
+    var propName = inputElement.getAttribute("data-prop-name");
+    lastClikedCy.data().properties[propName] = inputElement.value;
+}
+
 cy.on('click', 'node', function (evt) {
     lastClikedCy = evt.target;
     $('#propBody').remove();
     operationId = this.data().operatorId;
+    var properties = this.data().properties;
     var returnTypeId = this.data().returnTypeId;
     $.getJSON("/rest/getavailableproperties?opId=" + (operationId || ""), function (data) {
         //console.log(data);
@@ -68,7 +74,10 @@ cy.on('click', 'node', function (evt) {
         $('#propTable').append(ht);
         for (var item in data) {
             var name = data[item].name;
-            var html = "<tr><td>" + name + "</td><td><input type='text'></td></tr>";
+            var propertyValue = properties[name] || "";
+            var html = "<tr><td>" + name +
+                "</td><td><input type='text' data-prop-name='"+name+"' " +
+                "oninput='updatePropertyOfNode(this)' value='"+propertyValue+"'></td></tr>";
             $('#propTable').append(html);
         }
 
@@ -99,79 +108,39 @@ var updateOpertaionsPanel = function (sourceOpId) {
             btn.innerText = name;
             btn.classList += "btn btn-info";
             document.getElementById("tools_inner").appendChild(btn);
-            btn.addEventListener('click', function () {
-                console.log("source: " + operationId + " target " + data[item].id);
-                var cyData = [{
-                    group: "nodes",
-                    data: {
-                        id: nodeCount,
-                        label: name,
-                        operatorId: data[item].id,
-                        returnTypeId: data[item].returnType.id
-
-                    },
-                    position: {x: 200, y: 200}
-                }];
-                if (lastClikedCy) {
-                    cyData.push({
-                        group: "edges",
+            // this function helps preventing scope
+            (function (data,item, name){
+                btn.addEventListener('click', function () {
+                    var cyData = [{
+                        group: "nodes",
                         data: {
-                            source: lastClikedCy.id(),
-                            target: nodeCount
-                        }
+                            id: nodeCount,
+                            label: name,
+                            operatorId: data[item].id,
+                            returnTypeId: data[item].returnType.id,
+                            properties: {}
+                        },
+                        position: {x: 200, y: 200}
+                    }];
+                    if (lastClikedCy) {
+                        cyData.push({
+                            group: "edges",
+                            data: {
+                                source: lastClikedCy.id(),
+                                target: nodeCount
+                            }
 
-                    });
-                }
-                cy.add(cyData);
-                nodeCount++;
-            });
-            var btn = document.createElement("BUTTON");
-            btn.innerText = name;
-            btn.classList += "btn btn-info";
-            document.getElementById("tools_inner").innerHTML = "";
-            document.getElementById("tools_inner").appendChild(btn);
-            btn.addEventListener('click', function () {
-                console.log("source: " + operationId + " target " + data[item].id);
-                var cyData = [{
-                    group: "nodes",
-                    data: {
-                        id: nodeCount,
-                        label: name,
-                        operatorId: data[item].id,
-                        returnTypeId: data[item].returnType.id
+                        });
+                    }
+                    cy.add(cyData);
+                    nodeCount++;
+                    $("#btnRemoveNode").remove();
+                });
+            })(data,item, name);
+      } // end-for
 
-                    },
-                    position: {x: 200, y: 200}
-                }];
-                if (lastClikedCy) {
-                    cyData.push({
-                        group: "edges",
-                        data: {
-                            source: lastClikedCy.id(),
-                            target: nodeCount
-                        }
-
-                    });
-                }
-                cy.add(cyData);
-                nodeCount++;
-                $("#btnRemoveNode").remove();
-            });
-
-            cy.style()
-                .selector('node')
-                .style({
-                    'label': 'data(label)',
-                    shape: 'rectangle'
-                })
-                .selector("edge")
-                .style({
-                    'curve-style': "bezier",
-                    'target-arrow-shape': 'triangle'
-                })
-                .update()
-        }
-        if (sourceOpId && isNodeLeaf(lastClikedCy)) {
+      updateCyStyle(cy);
+      if (sourceOpId && isNodeLeaf(lastClikedCy)) {
             var btnRemove = document.createElement("BUTTON");
             btnRemove.innerText = "Remove";
             btnRemove.classList += "btn btn-sm btn-danger";
@@ -185,6 +154,21 @@ var updateOpertaionsPanel = function (sourceOpId) {
             });
         }
     });
+}
+
+function updateCyStyle(cy){
+    cy.style()
+        .selector('node')
+        .style({
+            'label': 'data(label)',
+            shape: 'rectangle'
+        })
+        .selector("edge")
+        .style({
+            'curve-style': "bezier",
+            'target-arrow-shape': 'triangle'
+        })
+        .update();
 }
 
 

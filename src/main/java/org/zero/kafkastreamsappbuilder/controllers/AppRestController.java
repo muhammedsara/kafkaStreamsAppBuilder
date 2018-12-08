@@ -44,6 +44,7 @@ public class AppRestController {
         }
     }
 
+
     @PostMapping("/app/generateCode")
     public String generateCode(@RequestParam("appJson") String appJson) {
 

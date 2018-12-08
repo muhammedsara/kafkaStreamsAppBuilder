@@ -37,4 +37,9 @@ public class AppRestController {
             throw new NoAppFoundException();
         }
     }
+    @PostMapping("/app/generateCode")
+    public String generateCode(@RequestParam("appJson") String appJson){
+        System.out.println(appJson);
+        return "osman";
+    }
 }

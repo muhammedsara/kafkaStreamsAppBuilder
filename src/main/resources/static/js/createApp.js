@@ -174,6 +174,19 @@ function updateCyStyle(cy){
         .update();
 }
 
+document.getElementById("btnGenerateCode").addEventListener('click', generateCode);
+
+function generateCode(){
+    graphData = JSON.stringify(cy.json());
+    $.post("/app/generateCode", {
+        appJson : graphData
+    }).done(function (response) {
+        $("#generatedCodeModal").find(".modal-body").text(response);
+        $("#generatedCodeModal").modal('show');
+    });
+}
+
+
 
 updateOpertaionsPanel();
 updateCyGraph();

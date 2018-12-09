@@ -178,8 +178,8 @@ document.getElementById("btnGenerateCode").addEventListener('click', generateCod
 
 function generateCode(){
     var graphData = cy.json();
-    var edges = graphData["elements"]["edges"].map(x=>x.data);
-    var nodes = graphData["elements"]["nodes"].map(x=>x.data);
+    var edges = (graphData["elements"]["edges"] || []).map(x=>x.data);
+    var nodes = (graphData["elements"]["nodes"] || []).map(x=>x.data);
 
     $.post("/app/generateCode", {
         appJson : JSON.stringify({

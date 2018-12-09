@@ -63,7 +63,7 @@ public class AppRestController {
                 String id = node.getString("id");
                 JSONObject props = node.getJSONObject("properties");
 
-                NodeModel model = new NodeModel();
+                NodeModel model = new NodeModel("node_"+id);
                 model.setOperator(operatorRepository.findById(operatorId).get());
 
                 for (String propName : props.keySet()) {

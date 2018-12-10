@@ -57,7 +57,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Modal body text goes here.</p>
+                        <p> <div id="editor"></div> </p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary">Build</button>
@@ -72,6 +72,7 @@
     <input type="hidden" id="appId" th:value="${app?.id}"/>
     <div th:replace="template::scripts"></div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.19/cytoscape.js"></script>
 <script type="text/javascript" src="/js/createApp.js"></script>
 </body>

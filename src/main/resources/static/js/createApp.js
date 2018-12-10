@@ -187,7 +187,15 @@ function generateCode(){
             nodes: nodes
         })
     }).done(function (response) {
-        $("#generatedCodeModal").find(".modal-body").text(response);
+        var editor = ace.edit("editor", {
+            theme: "ace/theme/kuroir",
+            mode: "ace/mode/java",
+            autoScrollEditorIntoView: true,
+            maxLines: 300,
+            minLines: 20
+        });
+        editor.setValue(response);
+       // $("#generatedCodeModal").find("#editor").text(response);
         $("#generatedCodeModal").modal('show');
     });
 }

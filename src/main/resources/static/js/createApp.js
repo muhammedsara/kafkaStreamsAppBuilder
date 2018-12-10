@@ -111,6 +111,9 @@ var updateOpertaionsPanel = function (sourceOpId) {
             btn.innerText = name;
             btn.classList += "btn btn-info";
             document.getElementById("tools_inner").appendChild(btn);
+            if(cy.json().elements.nodes){
+                nodeCount = cy.json().elements.nodes.length;
+            }
             // this function helps preventing scope
             (function (data,item, name){
                 btn.addEventListener('click', function () {

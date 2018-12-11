@@ -1,0 +1,2 @@
+KStream<${model.getPropertyInChain("keyType")}, ${model.properties.returnValueType}> ${model.variableName} =
+${model.parent.variableName}.map((key, value) -> new KeyValue<>(key, ${model.properties.mapExpression}));

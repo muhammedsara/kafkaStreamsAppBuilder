@@ -27,11 +27,16 @@ public class JavaSourceCodeGenerator {
                 roots.add(value);
             }
         }
+        return visitNodes(roots);
+    }
+
+    private static String visitNodes(List<NodeModel> roots) {
         StringBuilder code = new StringBuilder();
         for (NodeModel root : roots) {
             StringBuilder ret = new StringBuilder(generateCodeForNode(root));
             for(NodeModel child: root.getChildren()){
                 ret.append(generateCodeForNode(child));
+                ret.append(visitNodes(child.getChildren()));
             }
             code.append(ret);
         }
@@ -40,10 +45,10 @@ public class JavaSourceCodeGenerator {
 
 
     private static String generateCodeForNode(NodeModel node){
-        return velocityWithStringTemplateExample(node);
+        return generateCodeFromTemplate(node);
     }
 
-    private static String velocityWithStringTemplateExample(NodeModel node) {
+    private static String generateCodeFromTemplate(NodeModel node) {
 
         // Initialize my template repository. You can replace the "Hello $w" with your String.
         StringResourceRepository repo = (StringResourceRepository) engine.getApplicationAttribute(StringResourceLoader.REPOSITORY_NAME_DEFAULT);
@@ -57,7 +62,7 @@ public class JavaSourceCodeGenerator {
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
 
-        return writer.toString();
+        return writer.toString()+"\n";
     }
 
     private static VelocityEngine getVelocityEngine() {

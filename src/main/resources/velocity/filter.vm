@@ -1,0 +1,2 @@
+KStream<${model.getPropertyInChain("keyType")}, ${model.getPropertyInChain("valueType")}> ${model.variableName} =
+    stream.filter((key, value) -> $model.properties.filterExpression);

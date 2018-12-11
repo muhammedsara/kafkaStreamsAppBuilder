@@ -1,6 +1,7 @@
 package org.zero.kafkastreamsappbuilder.codegen.models;
 
 import org.zero.kafkastreamsappbuilder.models.OperatorModel;
+import org.zero.kafkastreamsappbuilder.models.PropertyModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,5 +64,15 @@ public class NodeModel {
     @Override
     public String toString() {
         return operator.getName() + " " + variableName;
+    }
+
+    public String getPropertyInChain(String name){
+        NodeModel objToSearchOn = this;
+        while(objToSearchOn!= null){
+            String ret = objToSearchOn.properties.get(name);
+            if(ret!=null) return ret;
+            objToSearchOn = objToSearchOn.parent;
+        }
+        return null;
     }
 }

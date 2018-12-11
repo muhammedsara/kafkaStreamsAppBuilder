@@ -14,7 +14,11 @@ import org.zero.kafkastreamsappbuilder.models.AppModel;
 import org.zero.kafkastreamsappbuilder.models.OperatorModel;
 import org.zero.kafkastreamsappbuilder.models.PropertyModel;
 import org.zero.kafkastreamsappbuilder.models.TypeModel;
+import org.zero.kafkastreamsappbuilder.services.OperatorService;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Date;
 
 @SpringBootApplication
@@ -29,9 +33,17 @@ public class KafkastreamsappbuilderApplication {
     private PropertyRepository propertyRepository;
     @Autowired
     private OperatorRepository operatorRepository;
+    @Autowired
+    private OperatorService operatorService;
 
     public static void main(String[] args) {
         SpringApplication.run(KafkastreamsappbuilderApplication.class, args);
+    }
+
+    @Bean
+    public OperatorService getOperatorService(){
+
+        return new OperatorService();
     }
 
     @Bean
@@ -55,25 +67,28 @@ public class KafkastreamsappbuilderApplication {
                 ktable.setTypeName("org.apache.kafka.streams.kstream.KTable");
                 typeRepository.save(ktable);
 
-                // map operator
-                OperatorModel kafkaSource = new OperatorModel();
-                kafkaSource.setSourceType(null);
-                kafkaSource.setReturnType(kstream);
-                kafkaSource.setName("kafka source");
-                operatorRepository.save(kafkaSource);
+                // kafka source operator
+                operatorService.addOperator("kafka source",
+                        "ksource.vm",
+                        null,
+                        kstream,
+                        Arrays.asList("topicName","keyType","valueType"));
 
                 // map operator
-                OperatorModel map = new OperatorModel();
-                map.setSourceType(kstream);
-                map.setReturnType(kstream);
-                map.setName("map stream");
-                operatorRepository.save(map);
+                operatorService.addOperator("map stream",
+                        "map.vm",
+                        kstream,
+                        kstream,
+                        Arrays.asList("mapExpression","returnValueType"));
 
-                //topic name
-                PropertyModel topicNameProperty = new PropertyModel();
-                topicNameProperty.setName("topic name");
-                topicNameProperty.setOperator(kafkaSource);
-                propertyRepository.save(topicNameProperty);
+                //filter operator
+                operatorService.addOperator("filter stream",
+                        "filter.vm",
+                        kstream,
+                        kstream,
+                        Arrays.asList("filterExpression"));
+
+
             }
         };
     }

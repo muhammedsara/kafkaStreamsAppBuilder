@@ -1,9 +1,9 @@
 # kafkaStreamsAppBuilder
-A gui tool for generating Kafka Streams Applications
+A web based gui tool for generating Kafka Streams Applications
 
 ## Usage
 
-Let's make WordCount demo application with KafkaStreamsAppBuilder
+WordCount demo application with KafkaStreamsAppBuilder
 
 --create operators
 ![filter](https://user-images.githubusercontent.com/22906805/49937357-8d84ef00-fee7-11e8-8e5b-bccb98ee7d57.png)

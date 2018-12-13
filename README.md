@@ -12,4 +12,5 @@ WordCount demo application with KafkaStreamsAppBuilder
 ![graph](https://user-images.githubusercontent.com/22906805/49937436-bad19d00-fee7-11e8-844b-ae73435ce3e4.png)
 
 --get the generated Java code
-![code](https://user-images.githubusercontent.com/22906805/49937460-ce7d0380-fee7-11e8-98eb-4243f864a066.png)
+![gene](https://user-images.githubusercontent.com/22906805/49939406-d17af280-feed-11e8-95ba-938bffffc8eb.png)
+

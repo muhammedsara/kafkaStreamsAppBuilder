@@ -6,19 +6,25 @@ import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.apache.velocity.runtime.resource.util.StringResourceRepository;
+import org.springframework.core.io.ClassPathResource;
 import org.zero.kafkastreamsappbuilder.codegen.models.NodeModel;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JavaSourceCodeGenerator {
 
 
+    private static final String STR_NL = "\n";
+    private static final String STR_TAB = "\t";
     private static VelocityEngine engine = getVelocityEngine();
 
-    public static String getSourceCodeFromNodeMap(Map<String, NodeModel> nodes){
+    public static String getSourceCodeFromNodeMap(Map<String, NodeModel> nodes) throws IOException {
         List<NodeModel> roots = new ArrayList<>();
 
         for (Map.Entry<String, NodeModel> entry : nodes.entrySet()) {
@@ -27,42 +33,57 @@ public class JavaSourceCodeGenerator {
                 roots.add(value);
             }
         }
-        return visitNodes(roots);
+        String generatedCode = visitNodes(roots);
+        return generateCodeFromTemplate(
+                new String(
+                        Files.readAllBytes(
+                                new ClassPathResource("velocity/main.vm")
+                                        .getFile()
+                                        .toPath()
+                        )
+                ),
+                new HashMap<String, Object>() {{
+                    put("generatedCode", generatedCode);
+                }}
+        );
     }
 
     private static String visitNodes(List<NodeModel> roots) {
         StringBuilder code = new StringBuilder();
         for (NodeModel root : roots) {
             StringBuilder ret = new StringBuilder(generateCodeForNode(root));
-            for(NodeModel child: root.getChildren()){
+            for (NodeModel child : root.getChildren()) {
                 ret.append(generateCodeForNode(child));
                 ret.append(visitNodes(child.getChildren()));
             }
-            code.append(ret);
+            code.append(STR_NL).append(ret);
         }
         return code.toString();
     }
 
-
-    private static String generateCodeForNode(NodeModel node){
-        return generateCodeFromTemplate(node);
+    private static String generateCodeForNode(NodeModel node) {
+        return STR_TAB + STR_TAB + generateCodeFromTemplate(
+                node.getOperator().getTemplate(),
+                new HashMap<String, Object>() {{
+                    put("model", node);
+                }}
+        ) + STR_NL;
     }
 
-    private static String generateCodeFromTemplate(NodeModel node) {
+    private static String generateCodeFromTemplate(String templateStr, Map<String, Object> contextObjects) {
 
-        // Initialize my template repository. You can replace the "Hello $w" with your String.
         StringResourceRepository repo = (StringResourceRepository) engine.getApplicationAttribute(StringResourceLoader.REPOSITORY_NAME_DEFAULT);
-        repo.putStringResource("template", node.getOperator().getTemplate());
+        repo.putStringResource("template", templateStr);
 
         // Set parameters for my template.
         VelocityContext context = new VelocityContext();
-        context.put("model",node);
+        contextObjects.forEach(context::put);
         // Get and merge the template with my parameters.
         Template template = engine.getTemplate("template");
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
 
-        return writer.toString()+"\n";
+        return writer.toString();
     }
 
     private static VelocityEngine getVelocityEngine() {

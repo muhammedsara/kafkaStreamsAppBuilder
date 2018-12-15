@@ -1,0 +1,18 @@
+public class App {
+
+    private String bootstrapServers = "localhost:9092";
+
+    public static void main(String[] args) {
+
+        Properties streamsConfiguration = new Properties();
+        streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        KStreamBuilder builder = new KStreamBuilder();
+
+        ${generatedCode}
+
+        KafkaStreams streams = new KafkaStreams(builder, streamsConfiguration);
+        streams.start();
+
+    }
+
+}

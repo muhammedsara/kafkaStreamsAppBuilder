@@ -12,6 +12,7 @@ import org.zero.kafkastreamsappbuilder.jpa.AppRepository;
 import org.zero.kafkastreamsappbuilder.jpa.OperatorRepository;
 import org.zero.kafkastreamsappbuilder.models.AppModel;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -46,7 +47,7 @@ public class AppRestController {
 
 
     @PostMapping("/app/generateCode")
-    public String generateCode(@RequestParam("appJson") String appJson) {
+    public String generateCode(@RequestParam("appJson") String appJson) throws IOException {
 
         JSONObject json = new JSONObject(appJson);
 

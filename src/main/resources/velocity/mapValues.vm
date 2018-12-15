@@ -1,0 +1,1 @@
+KTable<${model.getPropertyInChain("keyType")},${model.getPropertyInChain("valueType")}> ${model.variableName} = ${model.parent.variableName}.mapValues(value -> $model.properties.mapValuesExpression);

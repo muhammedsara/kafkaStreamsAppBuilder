@@ -41,7 +41,7 @@ public class KafkastreamsappbuilderApplication {
     }
 
     @Bean
-    public OperatorService getOperatorService(){
+    public OperatorService getOperatorService() {
 
         return new OperatorService();
     }
@@ -67,19 +67,25 @@ public class KafkastreamsappbuilderApplication {
                 ktable.setTypeName("org.apache.kafka.streams.kstream.KTable");
                 typeRepository.save(ktable);
 
+                // add kgrouped type
+                TypeModel kgrouped = new TypeModel();
+                kgrouped.setTypeName("org.apache.kafka.streams.kstream.KGrouped");
+                typeRepository.save(kgrouped);
+
+
                 // kafka source operator
                 operatorService.addOperator("kafka source",
                         "ksource.vm",
                         null,
                         kstream,
-                        Arrays.asList("topicName","keyType","valueType"));
+                        Arrays.asList("topicName", "keyType", "valueType"));
 
                 // map operator
                 operatorService.addOperator("map stream",
                         "map.vm",
                         kstream,
                         kstream,
-                        Arrays.asList("mapExpression","returnValueType"));
+                        Arrays.asList("mapExpression", "returnValueType"));
 
                 //filter operator
                 operatorService.addOperator("filter stream",
@@ -87,6 +93,49 @@ public class KafkastreamsappbuilderApplication {
                         kstream,
                         kstream,
                         Arrays.asList("filterExpression"));
+
+                //flatMapValues operator
+                operatorService.addOperator("flatMapValues stream",
+                        "flatMapValues.vm",
+                        kstream,
+                        kstream,
+                        Arrays.asList("flatMapValuesExpression"));
+
+                //groupByKey operator
+                operatorService.addOperator("groupByKey stream",
+                        "groupByKey.vm",
+                        kstream,
+                        kgrouped,
+                        Arrays.asList(""));
+
+
+                //count operator
+                operatorService.addOperator("count stream",
+                        "count.vm",
+                        kgrouped,
+                        ktable,
+                        Arrays.asList(""));
+
+                //mapValues operator
+                operatorService.addOperator("mapValues stream",
+                        "mapValues.vm",
+                        ktable,
+                        ktable,
+                        Arrays.asList("mapValuesExpression"));
+
+                //toStream operator
+                operatorService.addOperator("toStream stream",
+                        "toStream.vm",
+                        ktable,
+                        kstream,
+                        Arrays.asList(""));
+
+//                //groupBy operator
+//                operatorService.addOperator("groupBy stream",
+//                        "groupBy.vm",
+//                        kstream,
+//                        kstream,
+//                        Arrays.asList("groupByExpression"));
 
 
             }

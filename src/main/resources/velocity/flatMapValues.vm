@@ -1,2 +1,2 @@
 KStream<${model.getPropertyInChain("keyType")}, ${model.getPropertyInChain("valueType")}> ${model.variableName} =
-${model.parent.variableName}.filter((key, value) -> $model.properties.filterExpression);
+${model.parent.variableName}.flatMapValues(value -> $model.properties.flatMapValuesExpression);

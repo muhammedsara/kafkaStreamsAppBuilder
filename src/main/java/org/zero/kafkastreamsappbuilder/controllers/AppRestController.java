@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zero.kafkastreamsappbuilder.codegen.JavaSourceCodeGenerator;
+import org.zero.kafkastreamsappbuilder.codegen.JavaSourceCodeValidator;
 import org.zero.kafkastreamsappbuilder.codegen.models.NodeModel;
 import org.zero.kafkastreamsappbuilder.exceptions.NoAppFoundException;
 import org.zero.kafkastreamsappbuilder.jpa.AppRepository;
@@ -64,7 +65,7 @@ public class AppRestController {
                 String id = node.getString("id");
                 JSONObject props = node.getJSONObject("properties");
 
-                NodeModel model = new NodeModel("node_"+id);
+                NodeModel model = new NodeModel("node_" + id);
                 model.setOperator(operatorRepository.findById(operatorId).get());
 
                 for (String propName : props.keySet()) {
@@ -92,5 +93,16 @@ public class AppRestController {
 
         }
         return JavaSourceCodeGenerator.getSourceCodeFromNodeMap(idNodesMap);
+    }
+
+    @PostMapping("/app/validateCode")
+    public String validateAppCode(String code) {
+        Class cls = null;
+        try {
+            cls = JavaSourceCodeValidator.compileAndLoad("App",code);
+        } catch (JavaSourceCodeValidator.CompilationException e) {
+            return e.getCompilerMessage();
+        }
+        return "";
     }
 }

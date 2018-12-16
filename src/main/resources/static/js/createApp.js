@@ -3,6 +3,7 @@ var nodeCount = 0;
 var lastClikedCy;
 var btnSave;
 var graphData = JSON.parse(document.getElementById("appData").innerText || "{}") ;
+var codeValidationIntervalMillis = 2000;
 
 var updateCyGraph = function(){
     cy.json(graphData);
@@ -190,20 +191,64 @@ function generateCode(){
             nodes: nodes
         })
     }).done(function (response) {
-        var editor = ace.edit("editor", {
+        // intentionally made global
+        aceEditor = ace.edit("editor", {
             theme: "ace/theme/kuroir",
             mode: "ace/mode/java",
             autoScrollEditorIntoView: true,
             maxLines: 300,
             minLines: 20
         });
-        editor.setValue(response);
-       // $("#generatedCodeModal").find("#editor").text(response);
+        aceEditor.setValue(response);
         $("#generatedCodeModal").modal('show');
     });
 }
 
+var prevCode = "";
+var validateCodeTimer = setInterval(
+    function(){
+        var isModalVisible = $("#generatedCodeModal").is(":visible");
+        if (isModalVisible) {
+            var code = aceEditor.getValue();
+            // if no changes, do not check
+            if (prevCode === code) {
+                return;
+            }
+            prevCode = code;
+            $.post("/app/validateCode", {code:code}).done(
+                function(resp){
+                    clearErrorsFromEditor();
+                    parseCompilerMessage(resp);
+                    console.log(resp);
+                }
+            );
+        }
+    }, codeValidationIntervalMillis
+);
 
+function parseCompilerMessage(resp){
+    var parts = resp.split(/\.java:*/);
+    for(var i in parts){
+        var e = parts[i];
+        var text = e.split("^")[0];
+        var line = text.split(":")[0];
+        var col = 0;
+        addErrorToEditor(text,line - 1,col);
+    }
+}
+
+function clearErrorsFromEditor(){
+    aceEditor.getSession().setAnnotations([]);
+}
+
+function addErrorToEditor(text, row, col){
+    aceEditor.getSession().setAnnotations(aceEditor.getSession().$annotations.concat([{
+        row: row,
+        column: col,
+        text: text,
+        type: "error" // also warning and information
+    }]));
+}
 
 updateOpertaionsPanel();
 updateCyGraph();

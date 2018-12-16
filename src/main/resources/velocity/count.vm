@@ -1,0 +1,1 @@
+KTable<${model.getPropertyInChain("keyType")}, Long> ${model.variableName} = ${model.parent.variableName}.count();

@@ -1,1 +1,1 @@
-KStream<${model.properties.keyType}, ${model.properties.valueType}> ${model.variableName} = builder.stream(${model.properties.topicName});
+KStream<${model.properties.keyType}, ${model.properties.valueType}> ${model.variableName} = builder.stream("${model.properties.topicName}");
